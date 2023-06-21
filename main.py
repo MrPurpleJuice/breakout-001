@@ -1,48 +1,34 @@
 import pygame
 from pygame.locals import *
+from config import *
 
 # Initialize Pygame
 pygame.init()
 
 # Set up the game window
-width, height = 640, 480
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Breakout")
 
-# Set up colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
+clock = pygame.time.Clock()
 
 # Set up the paddle
-paddle_width = 80
-paddle_height = 10
-paddle_x = (width - paddle_width) // 2
-paddle_y = height - 20
-paddle_dx = 5
+paddle_x = (WINDOW_WIDTH - PADDLE_WIDTH) // 2
+paddle_y = WINDOW_HEIGHT - PADDLE_BOTTOM_MARGIN - PADDLE_HEIGHT
+paddle_dx = PADDLE_SPEED
 
 # Set up the ball
-ball_radius = 8
-ball_x = width // 2
-ball_y = height // 2
-ball_dx = 3
-ball_dy = 3
+ball_x = WINDOW_WIDTH // 2
+ball_y = WINDOW_HEIGHT // 2
+ball_dx = BALL_SPEED_X
+ball_dy = BALL_SPEED_Y
 
 # Set up the bricks
-brick_rows = 5
-brick_cols = 8
-brick_width = 75
-brick_height = 20
-brick_gap = 10
 bricks = []
-for row in range(brick_rows):
-    for col in range(brick_cols):
-        brick_x = col * (brick_width + brick_gap) + brick_gap
-        brick_y = row * (brick_height + brick_gap) + brick_gap
-        bricks.append(pygame.Rect(brick_x, brick_y, brick_width, brick_height))
-
-clock = pygame.time.Clock()
+for row in range(BRICK_ROWS):
+    for col in range(BRICK_COLS):
+        brick_x = col * (BRICK_WIDTH + BRICK_GAP) + BRICK_GAP
+        brick_y = row * (BRICK_HEIGHT + BRICK_GAP) + BRICK_GAP
+        bricks.append(pygame.Rect(brick_x, brick_y, BRICK_WIDTH, BRICK_HEIGHT))
 
 # Game loop
 running = True
@@ -58,32 +44,26 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[K_LEFT] and paddle_x > 0:
         paddle_x -= paddle_dx
-    if keys[K_RIGHT] and paddle_x < width - paddle_width:
+    if keys[K_RIGHT] and paddle_x < WINDOW_WIDTH - PADDLE_WIDTH:
         paddle_x += paddle_dx
 
     # Handle ball collisions with walls
-    if ball_x < 0 or ball_x > width - ball_radius:
+    if ball_x < 0 or ball_x > WINDOW_WIDTH - BALL_RADIUS:
         ball_dx *= -1
     if ball_y < 0:
         ball_dy *= -1
 
-    # Update the ball
-    ball_x += ball_dx
-    ball_y += ball_dy
-
     # Handle ball collision with paddle
     if (
-        ball_y + ball_radius >= paddle_y
-        and ball_x + ball_radius >= paddle_x
-        and ball_x - ball_radius <= paddle_x + paddle_width
+        ball_y + BALL_RADIUS >= paddle_y
+        and ball_x + BALL_RADIUS >= paddle_x
+        and ball_x - BALL_RADIUS <= paddle_x + PADDLE_WIDTH
     ):
         ball_dy *= -1
 
-    # Draw the paddle
-    pygame.draw.rect(screen, BLUE, (paddle_x, paddle_y, paddle_width, paddle_height))
-
-    # Draw the ball
-    ball = pygame.draw.circle(screen, RED, (ball_x, ball_y), ball_radius)
+    # Update the ball position
+    ball_x += ball_dx
+    ball_y += ball_dy
 
     # Handle ball collision with bricks
     for brick in bricks:
@@ -92,13 +72,18 @@ while running:
             ball_dy *= -1
             break
 
+    # Draw the paddle
+    pygame.draw.rect(screen, PADDLE_COLOR, (paddle_x, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT))
+
+    # Draw the ball
+    pygame.draw.circle(screen, BALL_COLOR, (ball_x, ball_y), BALL_RADIUS)
+
     # Draw the bricks
     for brick in bricks:
-        pygame.draw.rect(screen, WHITE, brick)
+        pygame.draw.rect(screen, BRICK_COLOR, brick)
 
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(FRAME_RATE)
 
 # Quit the game
 pygame.quit()
-

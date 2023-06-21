@@ -1,0 +1,30 @@
+# Window dimensions
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 480
+
+# Colors
+BLACK = (0, 0, 0)
+PADDLE_COLOR = (0, 0, 255)
+BALL_COLOR = (255, 0, 0)
+BRICK_COLOR = (255, 255, 255)
+
+# Paddle settings
+PADDLE_WIDTH = 80
+PADDLE_HEIGHT = 10
+PADDLE_BOTTOM_MARGIN = 20
+PADDLE_SPEED = 5
+
+# Ball settings
+BALL_RADIUS = 8
+BALL_SPEED_X = 3
+BALL_SPEED_Y = 3
+
+# Brick settings
+BRICK_ROWS = 5
+BRICK_COLS = 8
+BRICK_WIDTH = 75
+BRICK_HEIGHT = 20
+BRICK_GAP = 10
+
+# Game settings
+FRAME_RATE = 60
